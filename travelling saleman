@@ -1,0 +1,29 @@
+import itertools
+
+def calculate_distance(route, distance_matrix):
+    return sum(distance_matrix[route[i]][route[i + 1]] for i in range(len(route) - 1)) + distance_matrix[route[-1]][route[0]]
+
+def traveling_salesman(distance_matrix):
+    n = len(distance_matrix)
+    cities = list(range(n))
+    shortest_route = None
+    min_distance = float('inf')
+
+    for route in itertools.permutations(cities):
+        current_distance = calculate_distance(route, distance_matrix)
+        if current_distance < min_distance:
+            min_distance = current_distance
+            shortest_route = route
+
+    return shortest_route, min_distance
+
+# Example distance matrix
+distance_matrix = [
+    [0, 10, 15, 20],
+    [10, 0, 35, 25],
+    [15, 35, 0, 30],
+    [20, 25, 30, 0]
+]
+
+route, distance = traveling_salesman(distance_matrix)
+print(f"Shortest route: {route} with distance: {distance}")
