@@ -1,0 +1,39 @@
+from collections import deque
+
+def is_valid(m, c):
+    return m >= 0 and c >= 0 and (m == 0 or m >= c)
+
+def get_possible_moves(state):
+    m_left, c_left, boat, m_right, c_right = state
+    moves = []
+    if boat == 'left':
+        for m in range(0, 3):
+            for c in range(0, 3):
+                if m + c > 0 and m + c <= 2:
+                    new_state = (m_left - m, c_left - c, 'right', m_right + m, c_right + c)
+                    if is_valid(new_state[0], new_state[1]) and is_valid(new_state[3], new_state[4]):
+                        moves.append(new_state)
+    else:
+        for m in range(0, 3):
+            for c in range(0, 3):
+                if m + c > 0 and m + c <= 2:
+                    new_state = (m_left + m, c_left + c, 'left', m_right - m, c_right - c)
+                    if is_valid(new_state[0], new_state[1]) and is_valid(new_state[3], new_state[4]):
+                        moves.append(new_state)
+    return moves
+
+def solve_missionaries_and_cannibals():
+    initial_state = (3, 3, 'left', 0, 0)
+    queue = deque([initial_state])
+    visited = set()
+    while queue:
+        state = queue.popleft()
+        if state[0] == 0 and state[1] == 0:
+            return "Solution found!"
+        for move in get_possible_moves(state):
+            if move not in visited:
+                visited.add(move)
+                queue.append(move)
+    return "No solution exists."
+
+print(solve_missionaries_and_cannibals())
